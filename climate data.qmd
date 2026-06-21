@@ -36,6 +36,48 @@ env_data <- kaudulla_climate_monthly_clean |>
 
 ```
 
+<<<<<<< HEAD
+=======
+
+kaudulla_elephants_clean_imputed <- read_csv("kaudulla_elephants_clean_imputed.csv")
+
+df_sf <- kaudulla_elephants_clean_imputed |>
+  filter(!is.na(lon), !is.na(lat)) |>
+  st_as_sf(
+    coords = c("lon", "lat"),
+    crs = 4326
+  )
+```
+
+```{r}
+
+
+ dark_vibrant_colors   <-  c(
+    "#e6194b", "#3cb44b", "#ffe119", "#4363d8", "#f58231",
+    "#911eb4", "#46f0f0", "#f032e6", "#bcf60c", "#fabebe",
+    "#008080", "#e6beff", "#9a6324", "#fffac8", "#800000"
+  )
+
+color_palette1 <- colorFactor(palette = dark_vibrant_colors, domain = df_sf$name) 
+ 
+leaflet(df_sf) |>
+  addProviderTiles(providers$OpenStreetMap, group = "Street Map") |>
+  addProviderTiles(providers$Esri.WorldImagery, group = "Satellite") |>
+addPolylines( df_sf,
+              color = "darkgray", 
+              weight = 2, 
+              opacity = 0.7) |>  
+  addCircleMarkers( df_sf, 
+    color = ~color_palette1(name),
+    radius = 4,
+    stroke = FALSE, fillOpacity = 0.8,
+    popup = ~paste("<b>Date:</b>", datetime, "<br><b>Gender:</b>", sex)
+) |>
+addLegend(pal = color_palette1, values = ~name, title = "Name", position = "bottomright") |>
+  addLayersControl(baseGroups = c( "Street Map","Satellite"), options = layersControlOptions(collapsed = FALSE))   
+```
+
+>>>>>>> 1707a53c4e9a4cc4ad7b3c27db297174fb874f18
 ```{r}
 #| echo: false
 #| warning: false
