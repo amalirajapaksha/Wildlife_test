@@ -1,0 +1,94 @@
+---
+title: "Untitled"
+---
+
+```{r}
+
+library(readr)
+library(dplyr)
+library(plotly)
+kaudulla_climate_monthly_clean <- read_csv("kaudulla_climate_monthly_clean.csv")
+
+env_data <- kaudulla_climate_monthly_clean |>
+  mutate(
+    year = factor(year),
+
+    month_name = factor(
+      month_name,
+      levels = c(
+        "Jan", "Feb", "Mar", "Apr",
+        "May", "Jun", "Jul", "Aug",
+        "Sep", "Oct", "Nov", "Dec"
+      ),
+      ordered = TRUE
+    )
+  )
+
+
+library(tidyverse)
+library(plotly)
+
+env_data2 <- env_data |>
+   filter(year %in% c("2023", "2024", "2025"))
+
+make_heatmap <- function(df, var_name, title) {
+
+  p <- ggplot(
+    df,
+    aes(
+      x = month_name,
+      y = year,
+      fill = .data[[var_name]]
+    )
+  ) +
+    geom_tile(color = "white") +
+    scale_fill_viridis_c() +
+    labs(title = title, x = "Month", y = "Year") +
+    theme_minimal()
+
+  ggplotly(p)
+}
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+
+p_solar <- make_heatmap(env_data2, "solar_radiation", "Solar Radiation")
+p_cloud <- make_heatmap(env_data2, "cloud_amount", "Cloud Amount")
+p_soil <- make_heatmap(env_data2, "soil_wetness", "Soil Wetness")
+p_rain <- make_heatmap(env_data2, "rainfall", "Rainfall")
+p_pressure <- make_heatmap(env_data2, "pressure", "Pressure")
+p_temp <- make_heatmap(env_data2, "temp_max", "Max Temperature")
+p_temp_skin <- make_heatmap(env_data2, "temp_skin", "Skin Temperature")
+p_wind <- make_heatmap(env_data2, "wind_speed_max", "Wind Speed")
+p_wind_corrected <- make_heatmap(env_data2, "wind_speed_corrected", "Corrected Wind Speed")
+
+library(plotly)
+
+
+
+ library(crosstalk)
+library(plotly)
+library(htmltools)
+
+    p_solar
+    p_cloud
+    p_soil
+    p_rain
+    p_pressure
+    p_temp
+    p_temp_skin
+    p_wind
+    p_wind_corrected
+
+
+
+
+```
+
+```{r}
+
+```
