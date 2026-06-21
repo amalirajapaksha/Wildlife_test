@@ -1,5 +1,5 @@
 ---
-title: "Wildlife_test"
+title: ""
 ---
 
 ```{r}
@@ -12,6 +12,7 @@ library(sf)
 library(readr)
 library(plotly)
 library(adehabitatHR)
+library(leaflet)
 
 ```
 
@@ -46,6 +47,90 @@ df_sf_trans <- st_transform(df_sf, 32644)
 df_sp <- as(df_sf_trans, "Spatial")
 ```
 
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+color_palette1 <- colorFactor(
+  palette = c(
+    "#e6194b", "#3cb44b", "#ffe119", "#4363d8", "#f58231",
+    "#911eb4", "#46f0f0", "#f032e6", "#bcf60c", "#fabebe",
+    "#008080", "#e6beff", "#9a6324", "#fffac8", "#800000"
+  ),
+  domain = df_sf$name
+)
+ 
+
+
+
+leaflet(df_sf) %>%
+  addProviderTiles(providers$OpenStreetMap, group = "Street Map") %>%
+  addProviderTiles(providers$Esri.WorldImagery, group = "Satellite") %>%
+
+  # POINTS
+  addCircleMarkers(
+    color = ~color_palette1(name),
+    radius = 4,
+    stroke = FALSE,
+    fillOpacity = 0.8,
+    popup = ~paste("<b>Date:</b>", datetime,
+                   "<br><b>Gender:</b>", sex,
+                   "<b>Name:</b>", name)
+  ) %>%
+
+  # LEGEND
+  addLegend(
+    pal = color_palette1,
+    values = ~name,
+    title = "Name",
+    position = "bottomright"
+  ) %>%
+
+  # LAYERS CONTROL
+  addLayersControl(
+    baseGroups = c("Street Map", "Satellite"),
+    options = layersControlOptions(collapsed = FALSE)
+  )
+```
+\
+\
+\
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+g2 <- ggplot() +
+  geom_sf(
+    data = df_sf,
+    aes(color = factor(name)),
+    size = 0.75,
+    alpha = 0.5
+  ) +
+  theme_minimal() +
+  scale_color_manual(values = c(
+    "#e6194b", "#3cb44b", "#ffe119", "#4363d8", "#f58231",
+    "#911eb4", "#46f0f0", "#f032e6", "#bcf60c", "#fabebe",
+    "#008080", "#e6beff", "#9a6324", "#fffac8", "#800000"
+  )) +
+  guides(
+    color = guide_legend(
+      override.aes = list(size = 3, alpha = 1)
+    )
+  ) +
+  labs(
+    title = "Tracking Data",
+    x = "Longitude",
+    y = "Latitude",
+    color = "Name"
+  )
+
+g2
+```
+\
+\
+\
 ```{r}
 #| echo: false
 #| warning: false
@@ -90,9 +175,5 @@ g3 <- ggplot() +
   )
 
 g3
-
-```
-
-```{r}
 
 ```

@@ -1,12 +1,22 @@
 ---
-title: "Untitled"
+title: ""
 ---
 
 ```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
 
 library(readr)
 library(dplyr)
 library(plotly)
+library(tidyverse)
+library(crosstalk)
+library(htmltools)
+library(sf)
+library(leaflet)
+
 kaudulla_climate_monthly_clean <- read_csv("kaudulla_climate_monthly_clean.csv")
 
 env_data <- kaudulla_climate_monthly_clean |>
@@ -24,9 +34,12 @@ env_data <- kaudulla_climate_monthly_clean |>
     )
   )
 
+```
 
-library(tidyverse)
-library(plotly)
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
 
 env_data2 <- env_data |>
    filter(year %in% c("2023", "2024", "2025"))
@@ -48,13 +61,6 @@ make_heatmap <- function(df, var_name, title) {
 
   ggplotly(p)
 }
-```
-
-```{r}
-#| echo: false
-#| warning: false
-#| message: false
-
 
 p_solar <- make_heatmap(env_data2, "solar_radiation", "Solar Radiation")
 p_cloud <- make_heatmap(env_data2, "cloud_amount", "Cloud Amount")
@@ -66,26 +72,24 @@ p_temp_skin <- make_heatmap(env_data2, "temp_skin", "Skin Temperature")
 p_wind <- make_heatmap(env_data2, "wind_speed_max", "Wind Speed")
 p_wind_corrected <- make_heatmap(env_data2, "wind_speed_corrected", "Corrected Wind Speed")
 
-library(plotly)
 
+p_solar
 
+p_cloud
 
- library(crosstalk)
-library(plotly)
-library(htmltools)
+p_soil
 
-    p_solar
-    p_cloud
-    p_soil
-    p_rain
-    p_pressure
-    p_temp
-    p_temp_skin
-    p_wind
-    p_wind_corrected
+p_rain
 
+p_pressure
 
+p_temp
 
+p_temp_skin
+
+p_wind
+
+p_wind_corrected
 
 ```
 
