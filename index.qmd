@@ -1,0 +1,98 @@
+---
+title: "Wildlife_test"
+---
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+library(dplyr)
+library(sf)
+library(readr)
+library(plotly)
+library(adehabitatHR)
+
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+kaudulla_elephants_clean_imputed <- read_csv("kaudulla_elephants_clean_imputed.csv")
+
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+df_sf <- kaudulla_elephants_clean_imputed |>
+  filter(!is.na(lon), !is.na(lat)) |>
+  st_as_sf(
+    coords = c("lon", "lat"),
+    crs = 4326
+  )
+
+
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+df_sf_trans <- st_transform(df_sf, 32644)
+df_sp <- as(df_sf_trans, "Spatial")
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| fig-width: 35
+#| fig-height: 70
+#| out-width: "100%"
+
+g3 <- ggplot() +
+  geom_sf(
+    data = df_sf,
+    color = "darkblue",
+    size = 7,
+    alpha = 0.5
+  ) +
+  facet_wrap(~ name, ncol = 4) +
+  coord_sf() +
+  theme_minimal() +
+  labs(
+    title = "Tracking Data by Elephant",
+    x = "Longitude",
+    y = "Latitude"
+  ) +
+  theme(
+    plot.title = element_text(
+    size = 80,
+    face = "bold",
+    margin = margin(b = 40)
+  ),
+    axis.text.x = element_text(angle = 90, vjust = 0.5,hjust = 0.5, size = 30),
+    axis.ticks.x = element_line(),
+    axis.line.x = element_line(),
+    axis.text.y = element_text(size = 30),
+    axis.ticks.y = element_line(),
+    axis.line.y = element_line(),
+    axis.title.y = element_text(size = 40),
+    axis.title.x = element_text(size = 40),
+    strip.text = element_text(size = 40),
+    panel.grid.major = element_line(linewidth = 1.4),
+    panel.grid.minor = element_line(linewidth = 0.7),
+    panel.spacing = unit(10, "lines")
+  )
+
+g3
+
+```
+
+```{r}
+
+```
