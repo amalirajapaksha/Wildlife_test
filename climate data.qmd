@@ -36,17 +36,8 @@ env_data <- kaudulla_climate_monthly_clean |>
 
 ```
 
-<<<<<<< HEAD
-=======
+```{r}
 
-kaudulla_elephants_clean_imputed <- read_csv("kaudulla_elephants_clean_imputed.csv")
-
-df_sf <- kaudulla_elephants_clean_imputed |>
-  filter(!is.na(lon), !is.na(lat)) |>
-  st_as_sf(
-    coords = c("lon", "lat"),
-    crs = 4326
-  )
 ```
 
 ```{r}
@@ -77,7 +68,10 @@ addLegend(pal = color_palette1, values = ~name, title = "Name", position = "bott
   addLayersControl(baseGroups = c( "Street Map","Satellite"), options = layersControlOptions(collapsed = FALSE))   
 ```
 
->>>>>>> 1707a53c4e9a4cc4ad7b3c27db297174fb874f18
+```{r}
+
+```
+
 ```{r}
 #| echo: false
 #| warning: false
