@@ -8,9 +8,9 @@ website:
     left:
       - href: index.qmd
         text: Home
-      - href: Year Wise Comparison.qmd
+      - href: Year_Wise_Comparison.qmd
         text: Year Wise Comparison  
-      - href: climate data.qmd
+      - href: climate_data.qmd
         text: Climate Data Visualization
 
 
