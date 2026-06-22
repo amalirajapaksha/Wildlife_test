@@ -47,6 +47,8 @@ df_sf_trans <- st_transform(df_sf, 32644)
 df_sp <- as(df_sf_trans, "Spatial")
 ```
 
+# Overview
+
 ```{r}
 #| echo: false
 #| warning: false
@@ -93,9 +95,11 @@ leaflet(df_sf) %>%
     options = layersControlOptions(collapsed = FALSE)
   )
 ```
+
 \
 \
 \
+
 ```{r}
 #| echo: false
 #| warning: false
@@ -128,9 +132,9 @@ g2 <- ggplot() +
 
 g2
 ```
-\
-\
-\
+
+#   GPS Tracking Data by Elephant
+
 ```{r}
 #| echo: false
 #| warning: false
@@ -156,9 +160,8 @@ g3 <- ggplot() +
   ) +
   theme(
     plot.title = element_text(
-    size = 80,
-    face = "bold",
-    margin = margin(b = 40)
+    size = 70,,
+    margin = margin(b = 20)
   ),
     axis.text.x = element_text(angle = 90, vjust = 0.5,hjust = 0.5, size = 30),
     axis.ticks.x = element_line(),
