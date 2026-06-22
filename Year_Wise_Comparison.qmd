@@ -56,7 +56,6 @@ df_sf <- df_sf |>
 df_sf <- df_sf %>%
   arrange(name, datetime)
 
-
 lines_sf <- df_sf %>%
   arrange(name, datetime) %>%
   group_by(name) %>%
@@ -126,6 +125,13 @@ for(e in elephants){
     filter(name == e)
 
   m <- m %>%
+    addPolylines(
+      data = line_dat,
+      group = e,
+      color = "black",
+      weight = 2,
+      opacity = 0.6
+    ) %>%
     addCircleMarkers(
       data = dat,
       group = e,
