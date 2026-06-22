@@ -146,13 +146,19 @@ g2
 g3 <- ggplot() +
   geom_sf(
     data = df_sf,
-    color = "darkblue",
+    aes(color = sex),
     size = 7,
     alpha = 0.5
   ) +
   facet_wrap(~ name, ncol = 4) +
   coord_sf() +
   theme_minimal() +
+  scale_color_manual(
+    values = c(
+      "Male" = "darkblue",
+      "Female" = "darkred"
+    )
+  )  +
   labs(
     title = "Tracking Data by Elephant",
     x = "Longitude",
