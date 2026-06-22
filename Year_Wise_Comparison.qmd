@@ -125,13 +125,6 @@ for(e in elephants){
     filter(name == e)
 
   m <- m %>%
-    addPolylines(
-      data = line_dat,
-      group = e,
-      color = "black",
-      weight = 2,
-      opacity = 0.6
-    ) %>%
     addCircleMarkers(
       data = dat,
       group = e,

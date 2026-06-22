@@ -9,7 +9,7 @@ website:
       - href: index.qmd
         text: Home
       - href: Year_Wise_Comparison.qmd
-        text: Year Wise Comparison  
+        text: Individual Elephant Movement Patterns  
       - href: climate_data.qmd
         text: Climate Data Visualization
 
