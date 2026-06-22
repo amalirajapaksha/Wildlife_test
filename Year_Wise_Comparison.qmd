@@ -1,3 +1,164 @@
 ---
 title: " "
 ---
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+library(dplyr)
+library(sf)
+library(readr)
+library(plotly)
+library(adehabitatHR)
+library(leaflet)
+library(leaflet.extras2)
+library(htmltools)
+library(yyjsonr)
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+kaudulla_elephants_clean_imputed <- read_csv("kaudulla_elephants_clean_imputed.csv")
+
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+
+df_sf <- kaudulla_elephants_clean_imputed |>
+  filter(!is.na(lon), !is.na(lat)) |>
+  st_as_sf(
+    coords = c("lon", "lat"),
+    crs = 4326
+  )
+
+
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+df_sf <- df_sf |>
+  mutate(
+    year_month = format(datetime, "%Y-%m")
+  )
+
+df_sf <- df_sf %>%
+  arrange(name, datetime)
+
+
+lines_sf <- df_sf %>%
+  arrange(name, datetime) %>%
+  group_by(name) %>%
+  summarise(do_union = FALSE) %>%
+  st_cast("LINESTRING")
+
+
+pal <- colorFactor(
+  palette = c(
+    "#8B0000",  # dark red
+    "#006400",  # dark green
+    "#00008B",  # dark blue
+    "#8B4513",  # saddle brown
+    "#4B0082",  # indigo
+    "#2F4F4F",  # dark slate gray
+    "#800080",  # purple
+    "#B22222",  # firebrick
+    "#556B2F",  # dark olive green
+    "#191970",  # midnight blue
+    "#8B008B",  # dark magenta
+    "#A52A2A",  # brown
+    "#483D8B",  # dark slate blue
+    "#008080",  # teal
+    "#5F9EA0",  # cadet blue
+    "#7B3F00",  # dark bronze
+    "#3B3B6D",  # dark periwinkle
+    "#4A7023",  # dark moss green
+    "#6A0DAD",  # deep violet
+    "#7F1734",  # dark raspberry
+    "#0B3D91",  # navy blue
+    "#355E3B",  # hunter green
+    "#654321",  # dark brown
+    "#4B3621",  # coffee
+    "#36454F"   # charcoal
+  ),
+  domain = df_sf$year_month
+)
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+
+m <- leaflet() %>%
+  addProviderTiles(
+    providers$OpenStreetMap,
+    group = "Street Map"
+  ) %>%
+  addProviderTiles(
+    providers$Esri.WorldImagery,
+    group = "Satellite"
+  )
+
+
+
+elephants <- sort(unique(df_sf$name))
+
+for(e in elephants){
+
+  dat <- df_sf %>%
+    filter(name == e) %>%
+    arrange(datetime)
+
+  line_dat <- lines_sf %>%
+    filter(name == e)
+
+  m <- m %>%
+    addCircleMarkers(
+      data = dat,
+      group = e,
+      color = ~pal(year_month),
+      radius = 4,
+      stroke = FALSE,
+      fillOpacity = 1,
+      popup = ~paste(
+        "<b>Elephant:</b>", name,
+        "<br><b>Date:</b>", datetime,
+        "<br><b>Year-Month:</b>", year_month
+      )
+    )
+}
+
+
+m <- m %>%
+  addLayersControl(
+    overlayGroups = elephants,
+    baseGroups = c("Street Map", "Satellite"),
+    options = layersControlOptions(
+      collapsed = FALSE
+    )
+  )
+
+
+m <- m %>%
+  addLegend(
+    pal = pal,
+    values = df_sf$year_month,
+    title = "Year-Month",
+    position = "bottomright"
+  )
+
+m
+```
